@@ -1,4 +1,6 @@
-﻿namespace Tarefas.Presentation.Dtos
+﻿using Tarefas.Presentation.Enums;
+
+namespace Tarefas.Presentation.Dtos
 {
     public class TarefaDto
     {
@@ -7,6 +9,6 @@
         public string? Descricao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataConclusao { get; set; }
-        public string Status { get; set; } = "Pendente"; // Pendente, EmProgresso, Concluida
+        public StatusTarefa Status { get; set; } = StatusTarefa.Pendente;
     }
 }

@@ -33,6 +33,7 @@ namespace Tarefas.Presentation
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Instanciando a MainWindow com a dependência MainViewModel
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             base.OnStartup(e);

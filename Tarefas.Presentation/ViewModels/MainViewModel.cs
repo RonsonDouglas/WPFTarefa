@@ -1,10 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Tarefas.Presentation.Services.Interfaces;
 using Tarefas.Presentation.Dtos;
+using Tarefas.Presentation.Enums;
+using Tarefas.Presentation.Helpers;
 
 namespace Tarefas.Presentation.ViewModels
 {
@@ -12,7 +15,22 @@ namespace Tarefas.Presentation.ViewModels
     {
         private readonly ITarefaService _tarefaService;
 
-        public ObservableCollection<TarefaDto> Tarefas { get; } = new();
+        private StatusTarefa _selectedStatus;
+        private List<TarefaDto> _todasTarefas = new();
+
+        public ObservableCollection<TarefaDto> Tarefas { get; private set; } = new();
+
+        public List<StatusTarefa> StatusTarefaValores => EnumHelper.StatusTarefaValores;
+
+        public StatusTarefa SelectedStatus
+        {
+            get => _selectedStatus;
+            set
+            {
+                SetProperty(ref _selectedStatus, value);
+                FilterTarefas();
+            }
+        }
 
         public ICommand AbrirJanelaTarefaCommand { get; }
         public ICommand CarregarTarefasCommand { get; }
@@ -23,16 +41,32 @@ namespace Tarefas.Presentation.ViewModels
         {
             _tarefaService = tarefaService;
             AbrirJanelaTarefaCommand = new RelayCommand(AbrirJanelaTarefa);
-            CarregarTarefasCommand = new RelayCommand(CarregarTarefas);
+            CarregarTarefasCommand = new RelayCommand(async () => await CarregarTarefasAsync());
             EditarTarefaCommand = new RelayCommand<TarefaDto>(EditarTarefa);
             ExcluirTarefaCommand = new AsyncRelayCommand<TarefaDto>(ExcluirTarefaAsync);
+
+            SelectedStatus = StatusTarefa.Todos;
+
+            // Carrega tarefas ao iniciar
+            _ = CarregarTarefasAsync();
         }
 
-        private async void CarregarTarefas()
+        private async Task CarregarTarefasAsync()
         {
             var tarefas = await _tarefaService.ObterTodasAsync();
+            _todasTarefas = tarefas.ToList();
+            FilterTarefas();
+        }
+
+        private void FilterTarefas()
+        {
             Tarefas.Clear();
-            foreach (var tarefa in tarefas)
+
+            var tarefasFiltradas = SelectedStatus != StatusTarefa.Todos
+                ? _todasTarefas.Where(t => t.Status == SelectedStatus)
+                : _todasTarefas;
+
+            foreach (var tarefa in tarefasFiltradas)
             {
                 Tarefas.Add(tarefa);
             }
@@ -43,17 +77,17 @@ namespace Tarefas.Presentation.ViewModels
             var viewModel = new TarefaFormViewModel(_tarefaService);
             var janelaTarefa = new TarefaFormWindow(viewModel);
             janelaTarefa.ShowDialog();
-            CarregarTarefas();
+            _ = CarregarTarefasAsync();
         }
 
         private void EditarTarefa(TarefaDto tarefa)
         {
             if (tarefa == null) return;
 
-            var viewModel = new TarefaFormViewModel(_tarefaService, tarefa); // Abre com dados preenchidos
+            var viewModel = new TarefaFormViewModel(_tarefaService, tarefa);
             var janelaTarefa = new TarefaFormWindow(viewModel);
             janelaTarefa.ShowDialog();
-            CarregarTarefas(); // Atualiza após edição
+            _ = CarregarTarefasAsync();
         }
 
         private async Task ExcluirTarefaAsync(TarefaDto tarefa)
@@ -61,7 +95,7 @@ namespace Tarefas.Presentation.ViewModels
             if (tarefa == null) return;
 
             await _tarefaService.ExcluirAsync(tarefa.Id);
-            CarregarTarefas(); // Atualiza após exclusão
+            await CarregarTarefasAsync();
         }
     }
 }
