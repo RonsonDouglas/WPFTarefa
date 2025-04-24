@@ -1,0 +1,5 @@
+﻿<Application x:Class="Tarefas.Presentation.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Sem StartupUri porque o OnStartup gerencia isso -->
+</Application>
