@@ -8,7 +8,8 @@ namespace Tarefas.Presentation
         public TarefaFormWindow(TarefaFormViewModel viewModel)
         {
             InitializeComponent();
-            this.DataContext = viewModel; // Define o DataContext como o ViewModel
+            this.DataContext = viewModel; 
+
         }
     }
 }

@@ -67,11 +67,21 @@ namespace Tarefas.Presentation.ViewModels
             if (HasErrors) return;
 
             if (Tarefa.Id == 0)
+            {
                 await _tarefaService.CriarAsync(Tarefa);
-            else
-                await _tarefaService.AtualizarAsync(Tarefa);
+                // Exibe a mensagem de sucesso
+                MessageBox.Show("Tarefa salva com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
+            }         
+            else
+            {
+                await _tarefaService.AtualizarAsync(Tarefa);
+                // Exibe a mensagem de sucesso
+                MessageBox.Show("Tarefa atualizada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            
             _windowToClose?.Close();
+
         }
 
         private void Cancelar()
@@ -91,6 +101,7 @@ namespace Tarefas.Presentation.ViewModels
 
                 _errors[error.PropertyName].Add(error.ErrorMessage);
                 ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(error.PropertyName));
+                MessageBox.Show(error.ErrorMessage, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
