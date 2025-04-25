@@ -30,18 +30,18 @@ namespace Tarefas.Presentation.Services
                 }
                 else
                 {
-                    // Tratar o erro de forma amigável
-                    return new List<TarefaDto>();  // Ou lançar uma exceção customizada
+                 
+                    return new List<TarefaDto>(); 
                 }
             }
             catch (HttpRequestException ex)
             {
-                // Log de erro ou mensagem mais específica
+                
                 throw new Exception("Erro ao obter tarefas.", ex);
             }
             catch (Exception ex)
             {
-                // Captura outros erros não previstos
+                
                 throw new Exception("Erro inesperado ao obter tarefas.", ex);
             }
         }
