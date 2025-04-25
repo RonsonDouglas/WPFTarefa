@@ -11,7 +11,7 @@ namespace Tarefas.Presentation.Converters
         {
             if (value is StatusTarefa status)
             {
-                return status.ToString(); // Converte o enum para sua string equivalente
+                return status.ToString(); 
             }
 
             return string.Empty;
