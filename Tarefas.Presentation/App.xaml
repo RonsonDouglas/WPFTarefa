@@ -3,6 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:helpers="clr-namespace:Tarefas.Presentation.Helpers">
     <Application.Resources>
-        <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Use o caminho correto com o formato pack:// -->
+                <ResourceDictionary Source="/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <helpers:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

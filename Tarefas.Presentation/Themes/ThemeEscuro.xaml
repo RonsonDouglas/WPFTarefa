@@ -1,0 +1,89 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!-- Cores principais -->
+    <Color x:Key="PrimaryColor">#121212</Color>
+    <!-- Fundo escuro -->
+    <Color x:Key="AccentColor">#00FF91</Color>
+    <!-- Verde neon -->
+    <Color x:Key="BackgroundColor">#181818</Color>
+    <!-- Fundo suave -->
+    <Color x:Key="TextColor">#EAEAEA</Color>
+    <!-- Texto claro -->
+    <Color x:Key="ButtonHoverColor">#009688</Color>
+    <!-- Cor de hover para botões -->
+
+    <!-- Definições de Brush -->
+    <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="BackgroundColorBrush" Color="{StaticResource BackgroundColor}" />
+    <SolidColorBrush x:Key="TextColorBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="ButtonHoverColorBrush" Color="{StaticResource ButtonHoverColor}" />
+
+    <!-- Estilo de janela -->
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource BackgroundColorBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorBrush}"/>
+        <Setter Property="WindowStartupLocation" Value="CenterScreen"/>
+    </Style>
+
+    <!-- Estilo de botão -->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource AccentColorBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColorBrush}"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource ButtonHoverColorBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Estilo de ComboBox -->
+    <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColorBrush}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    <!-- Estilo de DataGrid -->
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="{StaticResource BackgroundColorBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorBrush}"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColorBrush}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="RowHeight" Value="30"/>
+    </Style>
+
+    <!-- Estilo de TextBox -->
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextColorBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColorBrush}"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <!-- Definições para fontes -->
+    <FontFamily x:Key="MainFontFamily">Segoe UI</FontFamily>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource MainFontFamily}"/>
+    </Style>
+</ResourceDictionary>

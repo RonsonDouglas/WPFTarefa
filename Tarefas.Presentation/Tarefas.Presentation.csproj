@@ -8,6 +8,22 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+ 
+
+  <ItemGroup>
+    <Resource Include="Themes\ThemePastel.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Themes\ThemeEscuro.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator></Generator>
+    </Resource>
+    <Resource Include="Themes\Theme.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="DevExpress.Data" Version="24.2.6" />
@@ -20,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
     <Folder Include="Helpers\" />
     <Folder Include="Dtos\" />
     <Folder Include="Entities\" />
