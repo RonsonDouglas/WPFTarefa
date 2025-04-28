@@ -3,7 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Tarefas.Presentation.Helpers"
         Title="Tarefa" Height="350" Width="400"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow"    
+    ResizeMode="NoResize">
+   
+    <!-- Impede o redimensionamento da janela -->
+
     <Window.Resources>
         <local:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"/>
     </Window.Resources>

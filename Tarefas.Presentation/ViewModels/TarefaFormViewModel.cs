@@ -22,7 +22,7 @@ namespace Tarefas.Presentation.ViewModels
     {
         private readonly ITarefaService _tarefaService;
         private readonly IValidator<TarefaDto> _validator;
-        private readonly Window? _windowToClose;
+        private Window? _windowToClose;
 
         private readonly Dictionary<string, List<string>> _errors = new();
 
@@ -35,11 +35,10 @@ namespace Tarefas.Presentation.ViewModels
         public ICommand SalvarCommand { get; }
         public ICommand CancelarCommand { get; }
 
-        public TarefaFormViewModel(ITarefaService tarefaService, TarefaDto? tarefa = null, Window? window = null)
+        public TarefaFormViewModel(ITarefaService tarefaService, TarefaDto? tarefa = null)
         {
             _tarefaService = tarefaService;
             _validator = new TarefaDtoValidator();
-            _windowToClose = window;
 
             Tarefa = tarefa != null ? new TarefaDto
             {
@@ -54,10 +53,30 @@ namespace Tarefas.Presentation.ViewModels
                 DataCriacao = DateTime.Now,
                 Status = StatusTarefa.Pendente
             };
+            if (Tarefa.Id == 0)
+            {
+                StatusTarefaValores = new ObservableCollection<StatusTarefa>(
+                EnumHelper.StatusTarefaValores.Where(x => x == StatusTarefa.Pendente));
+                // mantem somente pendente da lista de status
+            }
+            else
+            {
+                StatusTarefaValores = new ObservableCollection<StatusTarefa>(
+                EnumHelper.StatusTarefaValores.Where(x => x != StatusTarefa.Todos));
+                // Excluir a opção "Todas" da lista de status
+            }
 
-            StatusTarefaValores = new ObservableCollection<StatusTarefa>(EnumHelper.StatusTarefaValores);
+            
+
+
             SalvarCommand = new AsyncRelayCommand(SalvarAsync);
             CancelarCommand = new RelayCommand(Cancelar);
+        }
+
+        // Método para configurar a janela a ser fechada
+        public void SetWindowToClose(Window window)
+        {
+            _windowToClose = window;
         }
 
         private async Task SalvarAsync()
@@ -69,24 +88,20 @@ namespace Tarefas.Presentation.ViewModels
             if (Tarefa.Id == 0)
             {
                 await _tarefaService.CriarAsync(Tarefa);
-                // Exibe a mensagem de sucesso
                 MessageBox.Show("Tarefa salva com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            }         
+            }
             else
             {
                 await _tarefaService.AtualizarAsync(Tarefa);
-                // Exibe a mensagem de sucesso
                 MessageBox.Show("Tarefa atualizada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            
-            _windowToClose?.Close();
 
+            _windowToClose?.Close(); // Fecha a janela após salvar
         }
 
         private void Cancelar()
         {
-            _windowToClose?.Close();
+            _windowToClose?.Close(); // Fecha a janela ao cancelar
         }
 
         public void Validate()

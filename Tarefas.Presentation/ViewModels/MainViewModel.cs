@@ -8,6 +8,7 @@ using Tarefas.Presentation.Services.Interfaces;
 using Tarefas.Presentation.Dtos;
 using Tarefas.Presentation.Enums;
 using Tarefas.Presentation.Helpers;
+using System.Windows;
 
 namespace Tarefas.Presentation.ViewModels
 {
@@ -94,8 +95,18 @@ namespace Tarefas.Presentation.ViewModels
         {
             if (tarefa == null) return;
 
-            await _tarefaService.ExcluirAsync(tarefa.Id);
-            await CarregarTarefasAsync();
+            // Pergunta ao usuário se ele tem certeza da exclusão
+            var resultado = MessageBox.Show(
+                "Você tem certeza de que deseja excluir esta tarefa?",
+                "Confirmação de Exclusão",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (resultado == MessageBoxResult.Yes)
+            {
+                await _tarefaService.ExcluirAsync(tarefa.Id);
+                await CarregarTarefasAsync();
+            }
         }
     }
 }
