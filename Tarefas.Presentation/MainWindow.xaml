@@ -3,21 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="clr-namespace:Tarefas.Presentation.ViewModels"
         xmlns:local="clr-namespace:Tarefas.Presentation.Helpers"
-        Title="Tarefas" Height="450" Width="800"
+        Title="Tarefas" Height="500" Width="900"
         x:Name="MainWindowInstance">
     <Window.Resources>
         <local:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
     </Window.Resources>
 
-
-    <DockPanel Margin="10">
+    <DockPanel LastChildFill="True" Margin="10">
         <!-- Filtro de Status -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
             <ComboBox 
                 Width="200"
                 ItemsSource="{Binding StatusTarefaValores}"
                 SelectedItem="{Binding SelectedStatus}"
-                Margin="0,0,10,0">  
+                Margin="0,0,10,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
@@ -25,12 +24,24 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            
             <Button Content="Nova Tarefa" Command="{Binding AbrirJanelaTarefaCommand}" Width="100"/>
         </StackPanel>
 
+        <!-- Controles de Navegação -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Anterior" Command="{Binding PaginaAnteriorCommand}" Width="80" Margin="5"/>
+            <TextBlock Text="{Binding CurrentPage}" VerticalAlignment="Center" Margin="5" FontSize="16"/>
+            <TextBlock Text=" / " VerticalAlignment="Center" Margin="5" FontSize="16"/>
+            <TextBlock Text="{Binding TotalPages}" VerticalAlignment="Center" Margin="5" FontSize="16"/>
+            <Button Content="Próxima" Command="{Binding ProximaPaginaCommand}" Width="80" Margin="5"/>
+        </StackPanel>
+
         <!-- Lista de Tarefas -->
-        <DataGrid ItemsSource="{Binding Tarefas}" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataGrid ItemsSource="{Binding Tarefas}" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False"
+                  Margin="0,0,0,10"
+                  IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Título" Binding="{Binding Titulo}" Width="200"/>
@@ -54,5 +65,6 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
     </DockPanel>
 </Window>
