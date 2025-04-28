@@ -8,7 +8,6 @@ using Tarefas.Presentation.Services.Interfaces;
 using Tarefas.Presentation.Dtos;
 using Tarefas.Presentation.Enums;
 using Tarefas.Presentation.Helpers;
-using System.Windows;
 
 namespace Tarefas.Presentation.ViewModels
 {
@@ -33,10 +32,33 @@ namespace Tarefas.Presentation.ViewModels
             }
         }
 
+        private int _currentPage = 1;
+        private int _totalPages;
+
+        public int CurrentPage
+        {
+            get => _currentPage;
+            set
+            {
+                if (SetProperty(ref _currentPage, value))
+                {
+                    FilterTarefas();
+                }
+            }
+        }
+
+        public int TotalPages
+        {
+            get => _totalPages;
+            private set => SetProperty(ref _totalPages, value);
+        }
+
         public ICommand AbrirJanelaTarefaCommand { get; }
         public ICommand CarregarTarefasCommand { get; }
         public ICommand EditarTarefaCommand { get; }
         public ICommand ExcluirTarefaCommand { get; }
+        public ICommand ProximaPaginaCommand { get; }
+        public ICommand PaginaAnteriorCommand { get; }
 
         public MainViewModel(ITarefaService tarefaService)
         {
@@ -45,6 +67,8 @@ namespace Tarefas.Presentation.ViewModels
             CarregarTarefasCommand = new RelayCommand(async () => await CarregarTarefasAsync());
             EditarTarefaCommand = new RelayCommand<TarefaDto>(EditarTarefa);
             ExcluirTarefaCommand = new AsyncRelayCommand<TarefaDto>(ExcluirTarefaAsync);
+            ProximaPaginaCommand = new RelayCommand(ProximaPagina);
+            PaginaAnteriorCommand = new RelayCommand(PaginaAnterior);
 
             SelectedStatus = StatusTarefa.Todos;
 
@@ -67,10 +91,18 @@ namespace Tarefas.Presentation.ViewModels
                 ? _todasTarefas.Where(t => t.Status == SelectedStatus)
                 : _todasTarefas;
 
-            foreach (var tarefa in tarefasFiltradas)
+            // Implementando a paginação
+            var tarefasParaExibir = tarefasFiltradas
+                .Skip((CurrentPage - 1) * 5)
+                .Take(5);
+
+            foreach (var tarefa in tarefasParaExibir)
             {
                 Tarefas.Add(tarefa);
             }
+
+            // Atualizando o total de páginas
+            TotalPages = (int)Math.Ceiling(tarefasFiltradas.Count() / 5.0);
         }
 
         private void AbrirJanelaTarefa()
@@ -95,18 +127,20 @@ namespace Tarefas.Presentation.ViewModels
         {
             if (tarefa == null) return;
 
-            // Pergunta ao usuário se ele tem certeza da exclusão
-            var resultado = MessageBox.Show(
-                "Você tem certeza de que deseja excluir esta tarefa?",
-                "Confirmação de Exclusão",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            await _tarefaService.ExcluirAsync(tarefa.Id);
+            await CarregarTarefasAsync();
+        }
 
-            if (resultado == MessageBoxResult.Yes)
-            {
-                await _tarefaService.ExcluirAsync(tarefa.Id);
-                await CarregarTarefasAsync();
-            }
+        private void ProximaPagina()
+        {
+            if (CurrentPage < TotalPages)
+                CurrentPage++;
+        }
+
+        private void PaginaAnterior()
+        {
+            if (CurrentPage > 1)
+                CurrentPage--;
         }
     }
 }
